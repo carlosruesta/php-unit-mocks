@@ -58,8 +58,9 @@ class EncerradorTest extends TestCase
         /** @var Leilao[] $leiloesFinalizados */
         $leiloesFinalizados = $leilaoDaoMock->recuperarFinalizados();
         self::assertCount(2, $leiloesFinalizados);
-
         self::assertEquals('Fiat 147 0km', $leiloesFinalizados[0]->recuperarDescricao());
         self::assertEquals('Variante 1972 0km', $leiloesFinalizados[1]->recuperarDescricao());
+        self::assertTrue($leiloesFinalizados[0]->estaFinalizado());
+        self::assertTrue($leiloesFinalizados[1]->estaFinalizado());
     }
 }
