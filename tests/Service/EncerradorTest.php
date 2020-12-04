@@ -7,33 +7,33 @@ use Alura\Leilao\Dao\Leilao as LeilaoDao;
 use Alura\Leilao\Service\Encerrador;
 use PHPUnit\Framework\TestCase;
 
-class LeilaoDaoMock extends LeilaoDao
-{
-    private $leiloes = [];
-
-    public function salva(Leilao $leilao): void
-    {
-        $this->leiloes[] = $leilao;
-    }
-
-    public function recuperarFinalizados(): array
-    {
-        return array_filter($this->leiloes, function(Leilao $leilao) {
-            return $leilao->estaFinalizado();
-        });
-    }
-
-    public function recuperarNaoFinalizados(): array
-    {
-        return array_filter($this->leiloes, function(Leilao $leilao) {
-            return !$leilao->estaFinalizado();
-        });
-    }
-
-    public function atualiza(Leilao $leilao) {}
-
-
-}
+//class LeilaoDaoMock extends LeilaoDao
+//{
+//    private $leiloes = [];
+//
+//    public function salva(Leilao $leilao): void
+//    {
+//        $this->leiloes[] = $leilao;
+//    }
+//
+//    public function recuperarFinalizados(): array
+//    {
+//        return array_filter($this->leiloes, function(Leilao $leilao) {
+//            return $leilao->estaFinalizado();
+//        });
+//    }
+//
+//    public function recuperarNaoFinalizados(): array
+//    {
+//        return array_filter($this->leiloes, function(Leilao $leilao) {
+//            return !$leilao->estaFinalizado();
+//        });
+//    }
+//
+//    public function atualiza(Leilao $leilao) {}
+//
+//
+//}
 
 class EncerradorTest extends TestCase
 {
@@ -48,18 +48,31 @@ class EncerradorTest extends TestCase
             new \DateTimeImmutable('10 days ago')
         );
 
-        $leilaoDaoMock = new LeilaoDaoMock();
-        $leilaoDaoMock->salva($fiat147);
-        $leilaoDaoMock->salva($variant);
+        $leilaoDaoMock = $this->createMock(LeilaoDao::class);
+        $leilaoDaoMock->method('recuperarNaoFinalizados')->willReturn([
+            $fiat147, $variant]);
+
+        /** Garantir que o método seja chamado 2 vezes e com os parametros corretos **/
+        $leilaoDaoMock->expects($this->exactly(2))->method('atualiza')
+        ->withConsecutive([$fiat147], [$variant]);
+
+        /** Outra forma de instanciar um mock seria utilizando o método mockBuilder do PHPUnit
+         *  Neste será possível personalizar muito o mock para se comportar do jeito que eu quero
+         *  Por exemplo,
+         *      - configurar os parametros do construtor: setConstructorArgs
+         *      - desabilitar o construtor ou outros métodos: disableConstructor
+         */
+//        $leilaoDaoMockByBuilder = $this->getMockBuilder(LeilaoDao::class)
+//            ->setConstructorArgs([new \PDO('sqllite::memory:')])
+//            ->getMock();
+
 
         $encerrador = new Encerrador($leilaoDaoMock);
         $encerrador->encerra();
 
         /** @var Leilao[] $leiloesFinalizados */
-        $leiloesFinalizados = $leilaoDaoMock->recuperarFinalizados();
+        $leiloesFinalizados = [$fiat147, $variant];
         self::assertCount(2, $leiloesFinalizados);
-        self::assertEquals('Fiat 147 0km', $leiloesFinalizados[0]->recuperarDescricao());
-        self::assertEquals('Variante 1972 0km', $leiloesFinalizados[1]->recuperarDescricao());
         self::assertTrue($leiloesFinalizados[0]->estaFinalizado());
         self::assertTrue($leiloesFinalizados[1]->estaFinalizado());
     }
