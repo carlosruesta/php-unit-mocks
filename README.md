@@ -14,7 +14,7 @@
 * Como importar classes com alias (utilizando as)
     * Ou seja, dar outro nome à classe, na hora de importá-la com use
     
-### Aula 03 
+### Aula 02
 
 * Criar mock usando o método createMock do PHP unit. 
 + O PHP-Unit cria uma classe vazia que contem todas as assinaturas da classe original usando reflexioon;
@@ -34,3 +34,10 @@
     + Enquanto isso, ***Spies*** são stubs, que também gravam algum tipo de informação, baseado em como foram utilizados. Um bom exemplo é um serviço de e-mail, que guarda quantas mensagens foram enviadas.
     + Já os ***Mocks*** são os que estamos utilizando. São objetos pré-programados, com expectativas das mensagens (métodos e seus parâmetros) que vão receber.
     + Para conferir estas explicações em mais detalhes, aqui está um artigo super completo de um dos maiores gurus do desenvolvimento de software: [https://martinfowler.com/articles/mocksArentStubs.html].
+    
+### Aula 03
+
++ Reorganizamos o código comum dos testes no método setUp
++ Implementamos o enviador do e-mail utilizando uma função simples do PHP que envia e-mail
++ Implementamos um log de erro para tratar uma exceção e evitar que o código quebre. Fizemos utilizando uma função simples do PHP: error_log
++ Implementamos um Mock que lança uma exceção, com willThrowException
