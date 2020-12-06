@@ -41,3 +41,10 @@
 + Implementamos o enviador do e-mail utilizando uma função simples do PHP que envia e-mail
 + Implementamos um log de erro para tratar uma exceção e evitar que o código quebre. Fizemos utilizando uma função simples do PHP: error_log
 + Implementamos um Mock que lança uma exceção, com willThrowException
+
+### Aula 04
+
++ Verificar quais argumentos foram passados para um método (com with)
++ Capturar argumentos passados para métodos dos nossos mocks e fazer verificações neles (com willReturnCallback)
++ Como definir a implementação completa de um método do nosso mock (com willReturnCallback)
+
