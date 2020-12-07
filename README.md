@@ -48,3 +48,8 @@
 + Capturar argumentos passados para métodos dos nossos mocks e fazer verificações neles (com willReturnCallback)
 + Como definir a implementação completa de um método do nosso mock (com willReturnCallback)
 
+### Aula 05
++ Métodos estáticos dificultam os nossos testes, já que não podemos fazer a injeção de dependências
++ Chamadas ao sistema podem ser difíceis de testar se não utilizarmos injeção de dependências
++ Um código bem escrito é geralmente mais facilmente testável
++ Um código difícil de testar é um bom indicador de um código "mal escrito"
