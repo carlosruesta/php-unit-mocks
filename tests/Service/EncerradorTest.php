@@ -13,6 +13,7 @@ class EncerradorTest extends TestCase
 {
 
     private Encerrador $encerrador;
+    private Encerrador $encerradorUsandoStub;
     private Leilao $leilaoFiat47;
     private Leilao $leilaoVariante;
 
@@ -30,22 +31,44 @@ class EncerradorTest extends TestCase
             new \DateTimeImmutable('10 days ago')
         );
 
-        $leilaoDaoMock = $this->createMock(LeilaoDao::class);
-        $leilaoDaoMock->method('recuperarNaoFinalizados')
+//        $leilaoDaoMock = $this->createMock(LeilaoDao::class);
+//        $leilaoDaoMock->method('recuperarNaoFinalizados')
+//            ->willReturn([$this->leilaoFiat47, $this->leilaoVariante]);
+//
+//        /** Garantir que o método seja chamado 2 vezes e com os parametros corretos **/
+//        $leilaoDaoMock->expects($this->exactly(2))->method('atualiza')
+//            ->withConsecutive([$this->leilaoFiat47], [$this->leilaoVariante]);
+
+        $leilaoDaoStub = $this->createStub(LeilaoDao::class);
+        $leilaoDaoStub->method('recuperarNaoFinalizados')
             ->willReturn([$this->leilaoFiat47, $this->leilaoVariante]);
 
         /** Garantir que o método seja chamado 2 vezes e com os parametros corretos **/
-        $leilaoDaoMock->expects($this->exactly(2))->method('atualiza')
-            ->withConsecutive([$this->leilaoFiat47], [$this->leilaoVariante]);
+//        $leilaoDaoStub->method('atualiza')
+//            ->withConsecutive([$this->leilaoFiat47], [$this->leilaoVariante]);
 
         $this->enviadorEmailMock = $this->createMock(EnviadorEmail::class);
-        $this->encerrador = new Encerrador($leilaoDaoMock, $this->enviadorEmailMock);
+//        $this->encerrador = new Encerrador($leilaoDaoMock, $this->enviadorEmailMock);
+        $this->encerradorUsandoStub = new Encerrador($leilaoDaoStub, $this->enviadorEmailMock);
     }
 
-    public function testLeiloesComMaisDeUmaSemanaDevemSerEncerrados()
-    {
+//    public function testLeiloesComMaisDeUmaSemanaDevemSerEncerrados()
+//    {
+//
+//        $this->encerrador->encerra();
+//
+//        /** @var Leilao[] $leiloesFinalizados */
+//        $leiloesFinalizados = [$this->leilaoFiat47, $this->leilaoVariante];
+//        self::assertCount(2, $leiloesFinalizados);
+//        self::assertTrue($leiloesFinalizados[0]->estaFinalizado());
+//        self::assertTrue($leiloesFinalizados[1]->estaFinalizado());
+//    }
 
-        $this->encerrador->encerra();
+    public function testLeiloesComMaisDeUmaSemanaDevemSerEncerradosUsandoStub()
+    {
+//        var_dump($this->encerradorUsandoStub);
+//        die;
+        $this->encerradorUsandoStub->encerra();
 
         /** @var Leilao[] $leiloesFinalizados */
         $leiloesFinalizados = [$this->leilaoFiat47, $this->leilaoVariante];
@@ -54,29 +77,29 @@ class EncerradorTest extends TestCase
         self::assertTrue($leiloesFinalizados[1]->estaFinalizado());
     }
 
-    public function testDeveContinuarOProcessamentoAoEncontrarErroAoEnviarEmail()
-    {
-        $e = new \DomainException('Erro ao enviar e-mail');
-        $this->enviadorEmailMock
-            ->expects($this->exactly(2))
-            ->method('notificarTerminoLeilao')->willThrowException($e);
-        $this->encerrador->encerra();
-    }
-
-    public function testSoDeveEnviarLeilaoPorEmailAposFinalizado()
-    {
-        $this->enviadorEmailMock
-            ->expects($this->exactly(2))
-            ->method('notificarTerminoLeilao')
-            ->willReturnCallback(function (Leilao $leilao) {
-                static::assertTrue($leilao->estaFinalizado());
-            });
-
-        $this->enviadorEmailMock
-            ->expects($this->exactly(2))
-            ->method('notificarTerminoLeilao')
-            ->with($this->isType('object'));
-
-        $this->encerrador->encerra();
-    }
+//    public function testDeveContinuarOProcessamentoAoEncontrarErroAoEnviarEmail()
+//    {
+//        $e = new \DomainException('Erro ao enviar e-mail');
+//        $this->enviadorEmailMock
+//            ->expects($this->exactly(2))
+//            ->method('notificarTerminoLeilao')->willThrowException($e);
+//        $this->encerrador->encerra();
+//    }
+//
+//    public function testSoDeveEnviarLeilaoPorEmailAposFinalizado()
+//    {
+//        $this->enviadorEmailMock
+//            ->expects($this->exactly(2))
+//            ->method('notificarTerminoLeilao')
+//            ->willReturnCallback(function (Leilao $leilao) {
+//                static::assertTrue($leilao->estaFinalizado());
+//            });
+//
+//        $this->enviadorEmailMock
+//            ->expects($this->exactly(2))
+//            ->method('notificarTerminoLeilao')
+//            ->with($this->isType('object'));
+//
+//        $this->encerrador->encerra();
+//    }
 }
