@@ -1,11 +1,9 @@
 <?php
 
-namespace Alura\Leilao\Tests\Dao\Integration\Dao;
+namespace Alura\Leilao\Integration\Dao;
 
 use Alura\Leilao\Model\Leilao;
 use Alura\Leilao\Dao\Leilao as LeilaoDao;
-use Alura\Leilao\Infra\ConnectionCreator;
-use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\TestCase;
 
 class LeilaoDaoTest extends TestCase
@@ -110,6 +108,26 @@ class LeilaoDaoTest extends TestCase
         return [
             [[$naoFinalizado, $finalizado]]     // parametro 1, lembra de
         ];
+    }
+
+    public function testAoAtualizarLeilaoStatusDeveSerAlterado()
+    {
+        $leilao = new Leilao('Brasília Amarela');
+        $leilaoDao = new LeilaoDao(self::$pdo);
+        $leilao = $leilaoDao->salva($leilao);
+
+        $leiloes = $leilaoDao->recuperarNaoFinalizados();
+        self::assertCount(1, $leiloes);
+        self::assertSame('Brasília Amarela', $leiloes[0]->recuperarDescricao());
+        self::assertFalse($leiloes[0]->estaFinalizado());
+
+        $leilao->finaliza();
+        $leilaoDao->atualiza($leilao);
+
+        $leiloes = $leilaoDao->recuperarFinalizados();
+        self::assertCount(1, $leiloes);
+        self::assertSame('Brasília Amarela', $leiloes[0]->recuperarDescricao());
+        self::assertTrue($leiloes[0]->estaFinalizado());
     }
 
 }
