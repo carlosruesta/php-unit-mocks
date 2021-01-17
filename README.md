@@ -53,3 +53,17 @@
 + Chamadas ao sistema podem ser difíceis de testar se não utilizarmos injeção de dependências
 + Um código bem escrito é geralmente mais facilmente testável
 + Um código difícil de testar é um bom indicador de um código "mal escrito"
+
+
+## Curso Testes de Integração com PHP
+
+### Aula 01: Setup - Definições - Primeiros passos da integração com o banco
+
++ Testes de integração testam além do nosso código
++ Podemos testar a integração entre várias classes/módulos da aplicação
++ Podemos testar a integração com um sistema externo
+    + SGBD (banco de dados)
+    + API externa
+    + Requisições HTTP para o próprio sistema
++ Como realizar testes que interagem com o banco de dados
+
