@@ -5,6 +5,7 @@ namespace Alura\Leilao\Tests\Dao\Integration\Dao;
 use Alura\Leilao\Model\Leilao;
 use Alura\Leilao\Dao\Leilao as LeilaoDao;
 use Alura\Leilao\Infra\ConnectionCreator;
+use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\TestCase;
 
 class LeilaoDaoTest extends TestCase
@@ -30,10 +31,60 @@ class LeilaoDaoTest extends TestCase
         self::$pdo->beginTransaction();
     }
 
+    /**
+     * @dataProvider leiloes
+     */
+    public function testDeveBuscarLeiloesNaoFinalizados(array $leiloes)
+    {
+        // qrrange - given
+        $leilaoDao = new LeilaoDao(self::$pdo);
+//        $leilaoNaoFinalizado = new Leilao("Variante 0km");
+//        $leilaoFinalizado = new Leilao("Fiat 147 0Km");
+//        $leilaoFinalizado->finaliza();
+        foreach ($leiloes as $leilao) {
+            $leilaoDao->salva($leilao);
+        }
+
+        // act - when
+//        $leilaoDao->salva($leilaoNaoFinalizado);
+//        $leilaoDao->salva($leilaoFinalizado);
+        $leiloes = $leilaoDao->recuperarNaoFinalizados();
+
+        // assert - then
+        self::assertCount(1, $leiloes);
+        self::assertContainsOnlyInstancesOf(Leilao::class, $leiloes);
+        self::assertSame("Variante 0Km", $leiloes[0]->recuperarDescricao());
+    }
+
+    /**
+     * @dataProvider leiloes
+     */
+    public function testDeveBuscarLeiloesFinalizados(array $leiloes)
+    {
+        // qrrange - given
+        $leilaoDao = new LeilaoDao(self::$pdo);
+//        $leilaoNaoFinalizado = new Leilao("Variante 0km");
+//        $leilaoFinalizado = new Leilao("Fiat 123");
+//        $leilaoFinalizado->finaliza();
+        foreach ($leiloes as $leilao) {
+            $leilaoDao->salva($leilao);
+        }
+
+        // act - when
+//        $leilaoDao->salva($leilaoNaoFinalizado);
+//        $leilaoDao->salva($leilaoFinalizado);
+        $leiloes = $leilaoDao->recuperarFinalizados();
+
+        // assert - then
+        self::assertCount(1, $leiloes);
+        self::assertContainsOnlyInstancesOf(Leilao::class, $leiloes);
+        self::assertSame("Fiat 147 0Km", $leiloes[0]->recuperarDescricao());
+    }
+
     public function testInsercaoEBuscaDevemFuncionar()
     {
         // qrrange - given
-        $leilao = new Leilao("Variante 0km");
+        $leilao = new Leilao("Variante 0Km");
         $leilaoDao = new LeilaoDao(self::$pdo);
 
         // act - when
@@ -43,12 +94,22 @@ class LeilaoDaoTest extends TestCase
         // assert - then
         self::assertCount(1, $leiloes);
         self::assertContainsOnlyInstancesOf(Leilao::class, $leiloes);
-        self::assertSame("Variante 0km", $leiloes[0]->recuperarDescricao());
+        self::assertSame("Variante 0Km", $leiloes[0]->recuperarDescricao());
     }
 
     protected function tearDown(): void
     {
         self::$pdo->rollBack();
+    }
+
+    public function leiloes()
+    {
+        $naoFinalizado = new Leilao('Variante 0Km');
+        $finalizado = new Leilao('Fiat 147 0Km');
+        $finalizado->finaliza();
+        return [
+            [[$naoFinalizado, $finalizado]]     // parametro 1, lembra de
+        ];
     }
 
 }

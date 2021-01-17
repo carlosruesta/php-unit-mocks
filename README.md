@@ -74,3 +74,8 @@
 + Transações são nossas amigas ao testar o banco de dados. 
     + Devemos realizar todas as operações SQL de um teste dentro de uma transação
 + SQLite fornece um banco de dados em memória que pode auxiliar (e muito) na performance da suíte de testes
+
+### Aula 03: Data Providers e testes intermediarios
+
++ Como utilizar data providers
++ O conceito de testes (ou asserts) intermediários
