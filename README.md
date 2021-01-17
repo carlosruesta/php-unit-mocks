@@ -67,3 +67,10 @@
     + Requisições HTTP para o próprio sistema
 + Como realizar testes que interagem com o banco de dados
 
+### Aula 02: Garantindo a integridade
+
++ Não devemos utilizar o banco de dados de produção para realizar testes
++ Nossos testes devem ser independentes, para isso cada teste deve deixar o banco de dados clean
++ Transações são nossas amigas ao testar o banco de dados. 
+    + Devemos realizar todas as operações SQL de um teste dentro de uma transação
++ SQLite fornece um banco de dados em memória que pode auxiliar (e muito) na performance da suíte de testes
