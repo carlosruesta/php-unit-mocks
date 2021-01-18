@@ -79,3 +79,17 @@
 
 + Como utilizar data providers
 + O conceito de testes (ou asserts) intermediários
+
+### Aula 04: Testes intermediarios e teste de Update
+
+### Aula 05: Testes de API e uso do Postman
+
++ Levantar o servidor do PHP
+    + php -S localhost:8080
++ Uso de um arquivo rest.php que retorna um json com um array de leiloes
++ Ao testar a nossa "API", vimos que era necessário subir o nosso servidor web.
+    + Isso não é interessante que a gente dependa o mínimo possível de infraestrutura. 
+    + Quando utilizamos um framework (Symfony, por exemplo), já existem ferramentas que realizam requisições e este tipo de testes de integração, sem precisarmos subir um servidor.
+
++ Como realizar testes funcionais das nossas APIs
++ Como utilizar o Postman para automatizar os nossos testes
